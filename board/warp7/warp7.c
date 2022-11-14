@@ -18,6 +18,7 @@
 #include <common.h>
 #include <env.h>
 #include <asm/arch/crm_regs.h>
+#include <led.h>
 #include <netdev.h>
 #include <power/pmic.h>
 #include <power/pfuze3000_pmic.h>
@@ -65,6 +66,19 @@ int power_init_board(void)
 	return 0;
 }
 #endif
+
+int board_early_init_f(void)
+{
+	struct gpio_desc *desc;
+	int ret;
+
+	ret = gpio_hog_lookup_name("rst_mikrobus", &desc);
+	if (!ret)
+	{
+		dm_gpio_set_value(desc, 1);
+	}
+	return 0;
+}
 
 int board_init(void)
 {
